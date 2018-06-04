@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Grep through code for AST patterns",
   "main": "dist/index.js",
+  "bin": "dist/cli.js",
   "author": "Suchipi <me@suchipi.com>",
   "license": "MIT",
   "devDependencies": {
