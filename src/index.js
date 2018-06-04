@@ -50,7 +50,7 @@ export type Result =
 
 module.exports = async function astGrep({
   selector,
-  patterns = ["*.js", "**/*.js"],
+  patterns = ["*.js", "**/*.js", "*.jsx", "**/*.jsx"],
   gitignore = true,
   encoding = "utf-8",
   parser = babylon,
