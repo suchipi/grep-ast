@@ -1,4 +1,5 @@
 /* @flow */
+const debug = require("debug")("astgrep");
 const globby = require("globby");
 const babylon = require("@babel/parser");
 const fs = require("fs");
@@ -33,15 +34,23 @@ export type Options = $Shape<{
   getLoc: (node: Object) => Loc,
 }>;
 
-export type Result = {
-  filepath: string,
-  node: Object,
-  loc: Loc,
-};
+export type Result =
+  | {
+      filepath: string,
+      error: true,
+      message: string,
+    }
+  | {
+      filepath: string,
+      error: false,
+      message: string,
+      loc: Loc,
+      contents: string,
+    };
 
 module.exports = async function astGrep({
   selector,
-  patterns = ["**/*.js"],
+  patterns = ["*.js", "**/*.js"],
   gitignore = true,
   encoding = "utf-8",
   parser = babylon,
@@ -54,7 +63,6 @@ module.exports = async function astGrep({
     plugins: [
       "jsx",
       "flow",
-      "flowComments",
       "doExpressions",
       "objectRestSpread",
       "decorators",
@@ -79,21 +87,65 @@ module.exports = async function astGrep({
   },
   getLoc = (node) => node.loc,
 }: Options): Promise<Array<Result>> {
+  debug(`Matching patterns '${patterns.join(", ")}'...`);
   const files = await globby(patterns, { gitignore });
+  debug("Files matched:", files);
   const results: Array<Result> = [];
+
   await Promise.all(
-    files.map(async (file) => {
-      const contents = await fsp.readFile(file, encoding);
-      const ast = parser.parse(contents, parserOptions);
-      const nodes = esquery.query(ast, selector);
+    files.map(async (filepath) => {
+      let contents;
+      try {
+        debug(`Reading ${filepath}`);
+        contents = await fsp.readFile(filepath, encoding);
+      } catch (err) {
+        results.push({
+          filepath,
+          error: true,
+          message: `Failed to read '${filepath}': ${err.message}`,
+        });
+        return;
+      }
+
+      let ast;
+      try {
+        debug(`Parsing ${filepath}`);
+        ast = parser.parse(contents, parserOptions);
+      } catch (err) {
+        debug(`Failed to parse '${filepath}'`);
+        results.push({
+          filepath,
+          error: true,
+          message: `Failed to parse '${filepath}': ${err.message}`,
+        });
+        return;
+      }
+
+      let nodes;
+      try {
+        debug(`Querying AST for '${filepath}'`);
+        nodes = esquery.query(ast, selector);
+      } catch (err) {
+        debug(`Failed to query AST for '${filepath}'`);
+        results.push({
+          filepath,
+          error: true,
+          message: `Failed to query AST for '${filepath}': ${err.message}`,
+        });
+        return;
+      }
+
       nodes.forEach((node) => {
         results.push({
-          filepath: file,
-          node: node,
+          filepath,
+          error: false,
+          message: node.type,
           loc: getLoc(node),
+          contents,
         });
       });
     })
   );
+
   return results;
 };
