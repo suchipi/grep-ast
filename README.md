@@ -7,6 +7,8 @@ CLI tool that searches your codebase for AST patterns using [esquery](https://gi
 ```sh
 # For example, to find all `module.exports = `:
 npx grep-ast 'AssignmentExpression > MemberExpression[object.name=module][property.name=exports]'
+# Or to find all dynamic requires:
+npx grep-ast 'CallExpression[callee.name=require]:not([arguments.0.type=StringLiteral])'
 ```
 
 ## CLI Options
