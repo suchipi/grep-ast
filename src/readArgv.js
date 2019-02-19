@@ -19,7 +19,7 @@ module.exports = function readArgv(): Options {
       type: "string",
     })
     .option("ignore", {
-      describe: "Comma-separated list of directories to ignore",
+      describe: "Comma-separated list of glob patterns to ignore",
       type: "string",
     })
     .option("gitignore", {
