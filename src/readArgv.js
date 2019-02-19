@@ -5,6 +5,7 @@ const vm = require("vm");
 const debug = require("debug")("grep-ast");
 const resolve = require("resolve");
 const makeModuleEnv = require("make-module-env");
+const defaults = require("./defaults");
 
 module.exports = function readArgv(): Options {
   const argv = require("yargs")
@@ -15,6 +16,10 @@ module.exports = function readArgv(): Options {
     .option("patterns", {
       describe:
         "Space-separated list of glob patterns matching which files to look in. Defaults to './**/*.{js,jsx}'.",
+      type: "string",
+    })
+    .option("ignore", {
+      describe: "Comma-separated list of directories to ignore",
       type: "string",
     })
     .option("gitignore", {
@@ -53,6 +58,14 @@ module.exports = function readArgv(): Options {
 
   if (argv.patterns) {
     options.patterns = argv.patterns.split(" ");
+  } else {
+    options.patterns = defaults.patterns;
+  }
+
+  if (argv.ignore) {
+    options.patterns = options.patterns.concat(
+      argv.ignore.split(",").map((dir) => `!${dir}`)
+    );
   }
 
   if (argv.gitignore != null) {
