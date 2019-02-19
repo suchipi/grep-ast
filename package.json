@@ -1,38 +1,41 @@
 {
   "name": "grep-ast",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Grep through code for AST patterns",
   "main": "dist/index.js",
   "bin": "dist/cli.js",
   "author": "Suchipi <me@suchipi.com>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.49",
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/plugin-transform-flow-strip-types": "^7.0.0-beta.49",
-    "babel-eslint": "^8.2.3",
-    "eslint": "^4.19.1",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.3",
+    "@babel/plugin-transform-flow-strip-types": "^7.2.3",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.14.1",
     "eslint-config-unobtrusive": "^1.2.2",
-    "eslint-plugin-flowtype": "^2.49.3",
-    "eslint-plugin-import": "^2.12.0",
-    "flow-bin": "^0.73.0",
-    "jest": "^23.1.0",
-    "prettier": "^1.13.4",
-    "rimraf": "^2.6.2"
+    "eslint-plugin-flowtype": "^3.4.2",
+    "eslint-plugin-import": "^2.16.0",
+    "flow-bin": "^0.93.0",
+    "jest": "^24.1.0",
+    "prettier": "^1.16.4",
+    "rimraf": "^2.6.3"
   },
   "scripts": {
     "test": "jest",
-    "build": "rimraf dist/* && babel src --out-dir dist",
+    "build": "rimraf dist/* && babel src --out-dir dist && chmod +x dist/cli.js",
     "build:watch": "babel src --watch --out-dir dist"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.0.0-beta.49",
-    "@babel/parser": "^7.0.0-beta.48",
+    "@babel/code-frame": "^7.0.0",
+    "@babel/parser": "^7.3.3",
     "@suchipi/esquery": "^1.0.1",
-    "chalk": "^2.4.1",
-    "debug": "^3.1.0",
-    "globby": "^8.0.1",
-    "pify": "^3.0.0",
-    "yargs": "^11.0.0"
+    "chalk": "^2.4.2",
+    "debug": "^4.1.1",
+    "globby": "^9.0.0",
+    "make-module-env": "^1.0.1",
+    "ora": "^3.1.0",
+    "pify": "^4.0.1",
+    "resolve": "^1.10.0",
+    "yargs": "^13.2.1"
   }
 }

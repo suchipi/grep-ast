@@ -1,6 +1,10 @@
 /* @flow */
 import type { Options } from "./index";
-const debug = require("debug")("astgrep");
+const path = require("path");
+const vm = require("vm");
+const debug = require("debug")("grep-ast");
+const resolve = require("resolve");
+const makeModuleEnv = require("make-module-env");
 
 module.exports = function readArgv(): Options {
   const argv = require("yargs")
@@ -10,8 +14,8 @@ module.exports = function readArgv(): Options {
     })
     .option("patterns", {
       describe:
-        "Glob patterns matching which files to look in. Defaults to '**/*.js'",
-      type: "array",
+        "Space-separated list of glob patterns matching which files to look in. Defaults to './**/*.{js,jsx}'.",
+      type: "string",
     })
     .option("gitignore", {
       default: true,
@@ -32,6 +36,11 @@ module.exports = function readArgv(): Options {
       describe:
         "Options to pass to your parser's parse function, encoded as a JSON string.",
       type: "string",
+    })
+    .option("getLoc", {
+      describe:
+        "Function that receives an AST node and returns an object describing the node's location. Defaults to 'node => node.loc'.",
+      type: "string",
     }).argv;
 
   debug("argv: ", argv);
@@ -43,7 +52,7 @@ module.exports = function readArgv(): Options {
   }
 
   if (argv.patterns) {
-    options.patterns = argv.patterns;
+    options.patterns = argv.patterns.split(" ");
   }
 
   if (argv.gitignore != null) {
@@ -56,7 +65,16 @@ module.exports = function readArgv(): Options {
 
   if (argv.parser) {
     // $FlowFixMe
-    options.parser = require(argv.parser);
+    options.parser = require(resolve.sync(argv.parser, {
+      basedir: process.cwd(),
+    }));
+  }
+
+  if (argv.getLoc) {
+    options.getLoc = vm.runInNewContext(
+      argv.getLoc,
+      makeModuleEnv(path.join(process.cwd(), "grep-ast.js"))
+    );
   }
 
   if (argv.parserOptions) {

@@ -1,7 +1,6 @@
 /* @flow */
-const debug = require("debug")("astgrep");
+const debug = require("debug")("grep-ast");
 const globby = require("globby");
-const babylon = require("@babel/parser");
 const fs = require("fs");
 const esquery = require("@suchipi/esquery").configure({
   getKeys(node) {
@@ -10,6 +9,7 @@ const esquery = require("@suchipi/esquery").configure({
 });
 const pify = require("pify");
 const fsp = pify(fs);
+const defaults = require("./defaults");
 
 export type Loc = {
   start: {
@@ -48,52 +48,26 @@ export type Result =
       contents: string,
     };
 
-module.exports = async function astGrep({
-  selector,
-  patterns = ["*.js", "**/*.js", "*.jsx", "**/*.jsx"],
-  gitignore = true,
-  encoding = "utf-8",
-  parser = babylon,
-  parserOptions = {
-    allowImportExportEverywhere: true,
-    allowAwaitOutsideFunction: true,
-    allowReturnOutsideFunction: true,
-    allowSuperOutsideMethod: true,
-    sourceType: "unambiguous",
-    plugins: [
-      "jsx",
-      "flow",
-      "doExpressions",
-      "objectRestSpread",
-      "decorators",
-      "classProperties",
-      "classPrivateProperties",
-      "classPrivateMethods",
-      "exportDefaultFrom",
-      "exportNamespaceFrom",
-      "asyncGenerators",
-      "functionBind",
-      "functionSent",
-      "dynamicImport",
-      "numericSeparator",
-      "optionalChaining",
-      "importMeta",
-      "bigInt",
-      "optionalCatchBinding",
-      "throwExpressions",
-      "pipelineOperator",
-      "nullishCoalescingOperator",
-    ],
-  },
-  getLoc = (node) => node.loc,
-}: Options): Promise<Array<Result>> {
+module.exports = async function grepAst(
+  {
+    selector,
+    patterns = defaults.patterns,
+    gitignore = defaults.gitignore,
+    encoding = defaults.encoding,
+    parser = defaults.parser,
+    parserOptions = defaults.parserOptions,
+    getLoc = defaults.getLoc,
+  }: Options,
+  onGlobResolved: (files: Array<string>) => void
+): Promise<Array<Result>> {
   debug(`Matching patterns '${patterns.join(", ")}'...`);
   const files = await globby(patterns, { gitignore });
   debug("Files matched:", files);
+  onGlobResolved(files);
   const results: Array<Result> = [];
 
   await Promise.all(
-    files.map(async (filepath) => {
+    files.map(async (filepath, index) => {
       let contents;
       try {
         debug(`Reading ${filepath}`);
@@ -139,7 +113,6 @@ module.exports = async function astGrep({
         results.push({
           filepath,
           error: false,
-          message: node.type,
           loc: getLoc(node),
           contents,
         });

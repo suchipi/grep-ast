@@ -5,11 +5,35 @@ const chalk = require("chalk");
 (async function main() {
   try {
     const babelCodeFrame = require("@babel/code-frame");
-    const astGrep = require("./index");
+    const ora = require("ora");
+    const grepAst = require("./index");
     const readArgv = require("./readArgv");
+    const defaults = require("./defaults");
 
     const options = readArgv();
-    const results = await astGrep(options);
+
+    const patternsSpinner = ora(
+      chalk.blue(
+        `Matching patterns: ${JSON.stringify(
+          options.patterns || defaults.patterns
+        )}`
+      ) +
+        chalk.grey(
+          ` (gitignore: ${
+            options.gitignore || defaults.gitignore ? "enabled" : "disabled"
+          })`
+        )
+    );
+    patternsSpinner.start();
+    const filesSpinner = ora();
+
+    const results = await grepAst(options, (files) => {
+      patternsSpinner.succeed(chalk.green(`Found ${files.length} files.`));
+      filesSpinner.start(chalk.blue("Parsing files..."));
+    });
+    filesSpinner.succeed(chalk.green("Parsed files."));
+
+    process.stderr.write("\n" + chalk.blue("Results:") + "\n");
     results.forEach((result) => {
       if (result.error) {
         process.stderr.write(chalk.red(result.message) + "\n");
@@ -32,14 +56,26 @@ const chalk = require("chalk");
             message: result.message,
           }
         );
-        process.stdout.write(
-          `${result.filepath}: ${result.loc.start.line}:${
-            result.loc.start.column
-          }-${result.loc.end.line}:${result.loc.end.column}\n`
+        process.stderr.write(
+          result.filepath +
+            chalk.grey(
+              `: ${result.loc.start.line}:${result.loc.start.column}-${
+                result.loc.end.line
+              }:${result.loc.end.column}`
+            ) +
+            "\n"
         );
         process.stderr.write(codeFrame + "\n");
-        process.stdout.write("\n");
+        process.stderr.write("\n");
       }
+    });
+
+    process.stderr.write("\n" + chalk.blue("Matched files:") + "\n");
+    results.forEach((result) => {
+      if (result.error) {
+        return;
+      }
+      process.stdout.write(result.filepath + "\n");
     });
   } catch (error) {
     process.stderr.write(chalk.red(error) + "\n");
