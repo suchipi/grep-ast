@@ -59,7 +59,7 @@ const chalk = require("chalk");
         process.stderr.write(
           result.filepath +
             chalk.grey(
-              `: ${result.loc.start.line}:${result.loc.start.column}-${
+              `:${result.loc.start.line}:${result.loc.start.column}-${
                 result.loc.end.line
               }:${result.loc.end.column}`
             ) +
@@ -70,12 +70,20 @@ const chalk = require("chalk");
       }
     });
 
-    process.stderr.write("\n" + chalk.blue("Matched files:") + "\n");
-    results.forEach((result) => {
-      if (result.error) {
-        return;
-      }
-      process.stdout.write(result.filepath + "\n");
+    const nonErrorResults = results.filter((result) => !result.error);
+    process.stderr.write(
+      "\n" + chalk.blue(`${nonErrorResults.length} total matches:`) + "\n"
+    );
+    nonErrorResults.forEach((result) => {
+      process.stdout.write(
+        result.filepath +
+          chalk.grey(
+            `:${result.loc.start.line}:${result.loc.start.column}-${
+              result.loc.end.line
+            }:${result.loc.end.column}`
+          ) +
+          "\n"
+      );
     });
   } catch (error) {
     process.stderr.write(chalk.red(error) + "\n");
