@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* @flow */
 const chalk = require("chalk");
+import type { Result } from "./worker";
 
 (async function main() {
   try {
@@ -8,9 +9,11 @@ const chalk = require("chalk");
     const ora = require("ora");
     const grepAst = require("./index");
     const readArgv = require("./readArgv");
+    const parseArgv = require("./parseArgv");
     const defaults = require("./defaults");
 
-    const options = readArgv();
+    const argv = readArgv();
+    const options = parseArgv(argv);
 
     const patternsSpinner = ora(
       chalk.blue(
@@ -27,7 +30,7 @@ const chalk = require("chalk");
     patternsSpinner.start();
     const filesSpinner = ora();
 
-    const results = await grepAst(options, (files) => {
+    const results: Array<Result> = await grepAst(argv, (files) => {
       patternsSpinner.succeed(chalk.green(`Found ${files.length} files.`));
       filesSpinner.start(chalk.blue("Parsing files..."));
     });
@@ -75,6 +78,7 @@ const chalk = require("chalk");
       "\n" + chalk.blue(`${nonErrorResults.length} total matches:`) + "\n"
     );
     nonErrorResults.forEach((result) => {
+      if (result.error) return; // to make flow happy
       process.stdout.write(
         result.filepath +
           chalk.grey(
