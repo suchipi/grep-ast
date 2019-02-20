@@ -6,6 +6,7 @@
   "bin": "dist/cli.js",
   "author": "Suchipi <me@suchipi.com>",
   "license": "MIT",
+  "repository": "suchipi/grep-ast",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",
