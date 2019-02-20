@@ -1,17 +1,6 @@
 /* @flow */
 const debug = require("debug")("grep-ast");
-
-export type Argv = $Shape<{
-  selector: string,
-  patterns: string,
-  ignore: string,
-  gitignore: boolean,
-  encoding: string,
-  parser: string,
-  parserOptions: string,
-  getLoc: string,
-  _: [string],
-}>;
+import type { Argv } from "./types";
 
 let argv: Argv;
 module.exports = function readArgv(): Argv {

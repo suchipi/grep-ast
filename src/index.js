@@ -3,8 +3,7 @@ const debug = require("debug")("grep-ast");
 const globby = require("globby");
 const Worker = require("jest-worker").default;
 const parseArgv = require("./parseArgv");
-import type { Argv } from "./readArgv";
-import type { Result } from "./worker";
+import type { Argv, Result } from "./types";
 
 module.exports = async function grepAst(
   argv: Argv,

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* @flow */
 const chalk = require("chalk");
-import type { Result } from "./worker";
+import type { Result } from "./types";
 
 (async function main() {
   try {

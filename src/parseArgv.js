@@ -5,20 +5,7 @@ const debug = require("debug")("grep-ast");
 const resolve = require("resolve");
 const makeModuleEnv = require("make-module-env");
 const defaults = require("./defaults");
-import type { Argv } from "./readArgv";
-import type { Loc } from "./loc";
-
-export type Options = $Shape<{
-  selector: string,
-  patterns: Array<string>,
-  gitignore: boolean,
-  encoding: string,
-  parser: {
-    parse: (code: string, options: Object) => Object,
-  },
-  parserOptions: Object,
-  getLoc: (node: Object) => Loc,
-}>;
+import type { Argv, Options } from "./types";
 
 module.exports = function parseArgv(argv: Argv): Options {
   const options: Options = {};

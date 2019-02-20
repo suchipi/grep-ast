@@ -1,6 +1,5 @@
 /* @flow */
-import type { Argv } from "./readArgv";
-import type { Loc } from "./loc";
+import type { Argv, Result } from "./types";
 const debug = require("debug")(
   "grep-ast:" + String(process.env.JEST_WORKER_ID)
 );
@@ -13,20 +12,6 @@ const esquery = require("@suchipi/esquery").configure({
 const pify = require("pify");
 const fsp = pify(fs);
 const parseArgv = require("./parseArgv");
-
-export type Result =
-  | {
-      filepath: string,
-      error: true,
-      message: string,
-    }
-  | {
-      filepath: string,
-      error: false,
-      message: string,
-      loc: Loc,
-      contents: string,
-    };
 
 exports.processFile = async (
   filepath: string,
