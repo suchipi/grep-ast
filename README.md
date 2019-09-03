@@ -1,6 +1,6 @@
 # grep-ast
 
-CLI tool that searches your codebase for AST patterns using [esquery](https://github.com/estools/esquery).
+CLI tool that searches your codebase for AST patterns using [@babel-parser](https://babeljs.io/docs/en/babel-parser) and  [esquery](https://github.com/estools/esquery).
 
 ## Usage
 
@@ -10,6 +10,8 @@ npx grep-ast 'AssignmentExpression > MemberExpression[object.name=module][proper
 # Or to find all dynamic requires:
 npx grep-ast 'CallExpression[callee.name=require]:not([arguments.0.type=StringLiteral])'
 ```
+
+To get an idea of the AST format you need to grep over, you can use [AST Explorer](https://astexplorer.net/). To match the default parser and parser options for grep-ast, choose JavaScript, babylon7, and then press the gear next to babylon7 to open its settings, and uncheck "estree".
 
 ## CLI Options
 
