@@ -11,6 +11,8 @@ npx grep-ast 'AssignmentExpression > MemberExpression[object.name=module][proper
 npx grep-ast 'CallExpression[callee.name=require]:not([arguments.0.type=StringLiteral])'
 ```
 
+To quickly test your query syntax, you can use [esquery's live demo app](https://estools.github.io/esquery/).
+
 To get an idea of the AST format you need to grep over, you can use [AST Explorer](https://astexplorer.net/). To match the default parser and parser options for grep-ast, choose JavaScript, babylon7, and then press the gear next to babylon7 to open its settings, and uncheck "estree".
 
 ## CLI Options
