@@ -91,6 +91,13 @@ import type { Result } from "./types";
     });
   } catch (error) {
     process.stderr.write(chalk.red(error) + "\n");
+    if (
+      typeof error === "object" &&
+      error != null &&
+      typeof error.stack === "string"
+    ) {
+      process.stderr.write(chalk.red(error.stack) + "\n");
+    }
     process.exit(1);
   }
 })();
