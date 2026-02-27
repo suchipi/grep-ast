@@ -16,14 +16,17 @@
     "eslint-config-unobtrusive": "^1.2.5",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-import": "^2.26.0",
+    "first-base": "^1.6.1",
     "flow-bin": "^0.93.0",
     "flow-typed": "^3.8.0",
     "prettier": "^2.8.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "vitest": "^4.0.18"
   },
   "scripts": {
     "build": "rimraf dist/* && babel src --out-dir dist && chmod +x dist/cli.js",
-    "build:watch": "babel src --watch --out-dir dist"
+    "build:watch": "babel src --watch --out-dir dist",
+    "test": "vitest"
   },
   "dependencies": {
     "@babel/code-frame": "^7.18.6",
