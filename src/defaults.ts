@@ -1,3 +1,5 @@
+import type { Loc } from "./types";
+
 const babylon = require("@babel/parser");
 
 module.exports = {
@@ -36,5 +38,5 @@ module.exports = {
       "nullishCoalescingOperator",
     ],
   },
-  getLoc: (node) => node.loc,
+  getLoc: (node: { loc: Loc }): Loc => node.loc,
 };

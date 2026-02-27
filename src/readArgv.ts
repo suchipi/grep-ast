@@ -1,6 +1,6 @@
-/* @flow */
-const debug = require("debug")("grep-ast");
 import type { Argv } from "./types";
+
+const debug = require("debug")("grep-ast");
 
 let argv: Argv;
 module.exports = function readArgv(): Argv {

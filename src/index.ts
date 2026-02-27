@@ -1,9 +1,9 @@
-/* @flow */
+import type { Argv, Result } from "./types";
+
 const debug = require("debug")("grep-ast");
 const globby = require("globby");
 const Worker = require("jest-worker").default;
 const parseArgv = require("./parseArgv");
-import type { Argv, Result } from "./types";
 
 module.exports = async function grepAst(
   argv: Argv,
@@ -22,15 +22,15 @@ module.exports = async function grepAst(
   worker.getStdout().pipe(process.stdout);
   worker.getStderr().pipe(process.stderr);
   await Promise.all(
-    files.map(async (filepath) => {
+    files.map(async (filepath: string) => {
       try {
-        const resultsFromWorker = await worker.processFile(filepath, argv);
+        const resultsFromWorker = await (worker as { processFile: Function }).processFile(filepath, argv);
         results.push(...resultsFromWorker);
-      } catch (err) {
+      } catch (err: unknown) {
         results.push({
           filepath,
           error: true,
-          message: "Worker failed: " + err.stack,
+          message: "Worker failed: " + (err as Error).stack,
         });
       }
     })

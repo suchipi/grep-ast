@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-/* @flow */
-const chalk = require("chalk");
 import type { Result } from "./types";
+
+const chalk = require("chalk");
 
 (async function main() {
   try {
@@ -30,7 +30,7 @@ import type { Result } from "./types";
     patternsSpinner.start();
     const filesSpinner = ora();
 
-    const results: Array<Result> = await grepAst(argv, (files) => {
+    const results: Array<Result> = await grepAst(argv, (files: Array<string>) => {
       patternsSpinner.succeed(chalk.green(`Found ${files.length} files.`));
       filesSpinner.start(chalk.blue("Parsing files..."));
     });
@@ -78,7 +78,7 @@ import type { Result } from "./types";
       "\n" + chalk.blue(`${nonErrorResults.length} total matches:`) + "\n"
     );
     nonErrorResults.forEach((result) => {
-      if (result.error) return; // to make flow happy
+      if (result.error) return; // for type narrowing
       process.stdout.write(
         result.filepath +
           chalk.grey(
@@ -94,9 +94,9 @@ import type { Result } from "./types";
     if (
       typeof error === "object" &&
       error != null &&
-      typeof error.stack === "string"
+      typeof (error as Record<string, unknown>).stack === "string"
     ) {
-      process.stderr.write(chalk.red(error.stack) + "\n");
+      process.stderr.write(chalk.red((error as Error).stack) + "\n");
     }
     process.exit(1);
   }

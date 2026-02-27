@@ -1,8 +1,5 @@
 src
-.babelrc.js
-.eslintrc.js
-.eslintignore
-.flowconfig
+tsconfig.json
 .gitignore
 .npmignore
 .prettierrc

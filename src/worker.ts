@@ -1,11 +1,11 @@
-/* @flow */
 import type { Argv, Result } from "./types";
+
 const debug = require("debug")(
   "grep-ast:" + String(process.env.JEST_WORKER_ID)
 );
 const fs = require("fs");
 const esquery = require("@suchipi/esquery").configure({
-  getKeys(node) {
+  getKeys(node: {}) {
     return Object.keys(node);
   },
 });
@@ -20,16 +20,16 @@ exports.processFile = async (
   const options = parseArgv(argv);
   const { encoding, parser, parserOptions, selector, getLoc } = options;
 
-  let contents;
+  let contents: string;
   try {
     debug(`Reading ${filepath}`);
     contents = await fsp.readFile(filepath, encoding);
-  } catch (err) {
+  } catch (err: unknown) {
     return [
       {
         filepath,
         error: true,
-        message: `Failed to read '${filepath}': ${err.message}`,
+        message: `Failed to read '${filepath}': ${(err as Error).message}`,
       },
     ];
   }
@@ -38,28 +38,28 @@ exports.processFile = async (
   try {
     debug(`Parsing ${filepath}`);
     ast = parser.parse(contents, parserOptions);
-  } catch (err) {
+  } catch (err: unknown) {
     debug(`Failed to parse '${filepath}'`);
     return [
       {
         filepath,
         error: true,
-        message: `Failed to parse '${filepath}': ${err.message}`,
+        message: `Failed to parse '${filepath}': ${(err as Error).message}`,
       },
     ];
   }
 
-  let nodes;
+  let nodes: Array<{ loc: { start: { line: number; column: number }; end: { line: number; column: number } } }>;
   try {
     debug(`Querying AST for '${filepath}'`);
     nodes = esquery.query(ast, selector);
-  } catch (err) {
+  } catch (err: unknown) {
     debug(`Failed to query AST for '${filepath}'`);
     return [
       {
         filepath,
         error: true,
-        message: `Failed to query AST for '${filepath}': ${err.message}`,
+        message: `Failed to query AST for '${filepath}': ${(err as Error).message}`,
       },
     ];
   }
@@ -67,7 +67,8 @@ exports.processFile = async (
   return nodes.map((node) => {
     return {
       filepath,
-      error: false,
+      error: false as const,
+      message: "",
       loc: getLoc(node),
       contents,
     };

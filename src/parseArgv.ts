@@ -1,17 +1,17 @@
-/* @flow */
+import type { Argv, Options } from "./types";
+
 const path = require("path");
 const vm = require("vm");
 const debug = require("debug")("grep-ast");
 const resolve = require("resolve");
 const makeModuleEnv = require("make-module-env");
 const defaults = require("./defaults");
-import type { Argv, Options } from "./types";
 
-module.exports = function parseArgv(argv: Argv): Options {
+module.exports = function parseArgv(argv: Argv): Required<Options> {
   const options: Options = {};
 
-  if (argv._[0] || argv.selector) {
-    options.selector = argv._[0] || argv.selector;
+  if (argv._?.[0] || argv.selector) {
+    options.selector = argv._?.[0] || argv.selector;
   }
 
   if (argv.patterns) {
@@ -21,8 +21,8 @@ module.exports = function parseArgv(argv: Argv): Options {
   }
 
   if (argv.ignore) {
-    options.patterns = options.patterns.concat(
-      argv.ignore.split(",").map((dir) => `!${dir}`)
+    options.patterns = options.patterns!.concat(
+      argv.ignore.split(",").map((dir: string) => `!${dir}`)
     );
   }
 
@@ -35,7 +35,6 @@ module.exports = function parseArgv(argv: Argv): Options {
   }
 
   if (argv.parser) {
-    // $FlowFixMe
     options.parser = require(resolve.sync(argv.parser, {
       basedir: process.cwd(),
     }));
@@ -79,5 +78,5 @@ module.exports = function parseArgv(argv: Argv): Options {
 
   debug("resolved options: ", resolvedOptions);
 
-  return resolvedOptions;
+  return resolvedOptions as Required<Options>;
 };

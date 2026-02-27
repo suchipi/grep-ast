@@ -8,24 +8,20 @@
   "license": "MIT",
   "repository": "suchipi/grep-ast",
   "devDependencies": {
-    "@babel/cli": "^7.20.7",
     "@babel/core": "^7.20.12",
-    "@babel/eslint-parser": "^7.19.1",
-    "@babel/plugin-transform-flow-strip-types": "^7.19.0",
-    "eslint": "^8.31.0",
-    "eslint-config-unobtrusive": "^1.2.5",
-    "eslint-plugin-flowtype": "^8.0.3",
-    "eslint-plugin-import": "^2.26.0",
+    "@types/debug": "^4.1.12",
+    "@types/node": "^25.3.2",
+    "@types/resolve": "^1.20.6",
+    "@types/yargs": "^17.0.35",
     "first-base": "^1.6.1",
-    "flow-bin": "^0.93.0",
-    "flow-typed": "^3.8.0",
     "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
   "scripts": {
-    "build": "rimraf dist/* && babel src --out-dir dist && chmod +x dist/cli.js",
-    "build:watch": "babel src --watch --out-dir dist",
+    "build": "rimraf dist/* && tsc && chmod +x dist/cli.js",
+    "build:watch": "tsc --watch",
     "test": "vitest"
   },
   "dependencies": {
