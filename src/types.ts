@@ -7,20 +7,20 @@ export type Argv = Partial<{
   parser: string;
   parserOptions: string;
   getLoc: string;
-  _: [string];
+  _: Array<string>;
 }>;
 
-export type Options = Partial<{
+export type Options<NodeType = any, ParserOptionsType = any> = {
   selector: string;
   patterns: Array<string>;
   gitignore: boolean;
   encoding: string;
   parser: {
-    parse: (code: string, options: {}) => {};
+    parse: (code: string, options: ParserOptionsType) => {};
   };
-  parserOptions: {};
-  getLoc: (node: {}) => Loc;
-}>;
+  parserOptions: ParserOptionsType;
+  getLoc: (node: NodeType) => Loc;
+};
 
 export type Loc = {
   start: {

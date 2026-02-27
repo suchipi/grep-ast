@@ -1,17 +1,15 @@
 #!/usr/bin/env node
 import type { Result } from "./types";
-
-const chalk = require("chalk");
+import chalk from "chalk";
+import babelCodeFrame from "@babel/code-frame";
+import ora from "ora";
+import grepAst from "./index";
+import readArgv from "./readArgv";
+import parseArgv from "./parseArgv";
+import defaults from "./defaults";
 
 (async function main() {
   try {
-    const babelCodeFrame = require("@babel/code-frame");
-    const ora = require("ora");
-    const grepAst = require("./index");
-    const readArgv = require("./readArgv");
-    const parseArgv = require("./parseArgv");
-    const defaults = require("./defaults");
-
     const argv = readArgv();
     const options = parseArgv(argv);
 
@@ -30,10 +28,13 @@ const chalk = require("chalk");
     patternsSpinner.start();
     const filesSpinner = ora();
 
-    const results: Array<Result> = await grepAst(argv, (files: Array<string>) => {
-      patternsSpinner.succeed(chalk.green(`Found ${files.length} files.`));
-      filesSpinner.start(chalk.blue("Parsing files..."));
-    });
+    const results: Array<Result> = await grepAst(
+      argv,
+      (files: Array<string>) => {
+        patternsSpinner.succeed(chalk.green(`Found ${files.length} files.`));
+        filesSpinner.start(chalk.blue("Parsing files..."));
+      }
+    );
     filesSpinner.succeed(chalk.green("Parsed files."));
 
     process.stderr.write("\n" + chalk.blue("Results:") + "\n");
@@ -62,9 +63,7 @@ const chalk = require("chalk");
         process.stderr.write(
           result.filepath +
             chalk.grey(
-              `:${result.loc.start.line}:${result.loc.start.column}-${
-                result.loc.end.line
-              }:${result.loc.end.column}`
+              `:${result.loc.start.line}:${result.loc.start.column}-${result.loc.end.line}:${result.loc.end.column}`
             ) +
             "\n"
         );
@@ -82,9 +81,7 @@ const chalk = require("chalk");
       process.stdout.write(
         result.filepath +
           chalk.grey(
-            `:${result.loc.start.line}:${result.loc.start.column}-${
-              result.loc.end.line
-            }:${result.loc.end.column}`
+            `:${result.loc.start.line}:${result.loc.start.column}-${result.loc.end.line}:${result.loc.end.column}`
           ) +
           "\n"
       );
@@ -94,9 +91,10 @@ const chalk = require("chalk");
     if (
       typeof error === "object" &&
       error != null &&
-      typeof (error as Record<string, unknown>).stack === "string"
+      "stack" in error &&
+      typeof error.stack === "string"
     ) {
-      process.stderr.write(chalk.red((error as Error).stack) + "\n");
+      process.stderr.write(chalk.red(error.stack) + "\n");
     }
     process.exit(1);
   }

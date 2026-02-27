@@ -1,14 +1,16 @@
 import type { Argv } from "./types";
+import makeDebug from "debug";
+import yargs from "yargs";
 
-const debug = require("debug")("grep-ast");
+const debug = makeDebug("grep-ast");
 
 let argv: Argv;
-module.exports = function readArgv(): Argv {
+export default function readArgv(): Argv {
   if (argv) {
     return argv;
   }
 
-  argv = require("yargs")
+  const result = yargs
     .option("selector", {
       describe: "CSS-like selector string to search AST for",
       type: "string",
@@ -48,7 +50,10 @@ module.exports = function readArgv(): Argv {
       type: "string",
     }).argv;
 
+  // TODO
+  argv = result as any;
+
   debug("argv: ", argv);
 
   return argv;
-};
+}

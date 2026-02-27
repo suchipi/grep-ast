@@ -1,14 +1,15 @@
 import type { Argv, Options } from "./types";
+import path from "path";
+import vm from "vm";
+import makeDebug from "debug";
+import resolve from "resolve";
+import makeModuleEnv from "make-module-env";
+import defaults from "./defaults";
 
-const path = require("path");
-const vm = require("vm");
-const debug = require("debug")("grep-ast");
-const resolve = require("resolve");
-const makeModuleEnv = require("make-module-env");
-const defaults = require("./defaults");
+const debug = makeDebug("grep-ast");
 
-module.exports = function parseArgv(argv: Argv): Required<Options> {
-  const options: Options = {};
+export default function parseArgv(argv: Argv): Options {
+  const options: Partial<Options> = {};
 
   if (argv._?.[0] || argv.selector) {
     options.selector = argv._?.[0] || argv.selector;
@@ -66,7 +67,7 @@ module.exports = function parseArgv(argv: Argv): Required<Options> {
     getLoc = defaults.getLoc,
   } = options;
 
-  const resolvedOptions = {
+  const resolvedOptions: Options = {
     selector: options.selector,
     patterns,
     gitignore,
@@ -78,5 +79,5 @@ module.exports = function parseArgv(argv: Argv): Required<Options> {
 
   debug("resolved options: ", resolvedOptions);
 
-  return resolvedOptions as Required<Options>;
-};
+  return resolvedOptions;
+}

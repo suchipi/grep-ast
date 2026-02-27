@@ -4,9 +4,9 @@ import { spawn } from "first-base";
 const cliPath = require.resolve("../dist/cli.js");
 
 test("help text", async () => {
-    const run = spawn("node", [cliPath, "--help"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [cliPath, "--help"]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -32,13 +32,13 @@ test("help text", async () => {
                          node.loc'.                                           [string]
       ",
       }
-    `)
+    `);
 });
 
 test("version flag", async () => {
-    const run = spawn("node", [cliPath, "--version"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [cliPath, "--version"]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -50,9 +50,9 @@ test("version flag", async () => {
 });
 
 test("no selector - exits with error", async () => {
-    const run = spawn("node", [cliPath, "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [cliPath, "--patterns", "./fixtures/simple.js"]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 1,
         "error": false,
@@ -66,9 +66,14 @@ test("no selector - exits with error", async () => {
 });
 
 test("basic selector match - FunctionDeclaration", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration", "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -97,9 +102,14 @@ test("basic selector match - FunctionDeclaration", async () => {
 });
 
 test("selector with no matches", async () => {
-    const run = spawn("node", [cliPath, "ClassDeclaration", "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "ClassDeclaration",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -118,9 +128,14 @@ test("selector with no matches", async () => {
 });
 
 test("multiple matches in one file", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration", "--patterns", "./fixtures/two-functions.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/two-functions.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -163,13 +178,14 @@ test("multiple matches in one file", async () => {
 });
 
 test("complex selector - AssignmentExpression with module.exports", async () => {
-    const run = spawn("node", [
-        cliPath,
-        "AssignmentExpression > MemberExpression[object.name=module][property.name=exports]",
-        "--patterns", "./fixtures/module-exports.js",
-    ]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "AssignmentExpression > MemberExpression[object.name=module][property.name=exports]",
+    "--patterns",
+    "./fixtures/module-exports.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -195,13 +211,14 @@ test("complex selector - AssignmentExpression with module.exports", async () => 
 });
 
 test("dynamic require selector from README", async () => {
-    const run = spawn("node", [
-        cliPath,
-        "CallExpression[callee.name=require]:not([arguments.0.type=StringLiteral])",
-        "--patterns", "./fixtures/dynamic-require.js",
-    ]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "CallExpression[callee.name=require]:not([arguments.0.type=StringLiteral])",
+    "--patterns",
+    "./fixtures/dynamic-require.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -227,9 +244,14 @@ test("dynamic require selector from README", async () => {
 });
 
 test("arrow function expression matching", async () => {
-    const run = spawn("node", [cliPath, "ArrowFunctionExpression", "--patterns", "./fixtures/arrow-functions.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "ArrowFunctionExpression",
+    "--patterns",
+    "./fixtures/arrow-functions.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -262,9 +284,14 @@ test("arrow function expression matching", async () => {
 });
 
 test("JSX file support", async () => {
-    const run = spawn("node", [cliPath, "JSXElement", "--patterns", "./fixtures/has-jsx.jsx"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "JSXElement",
+    "--patterns",
+    "./fixtures/has-jsx.jsx",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -291,9 +318,14 @@ test("JSX file support", async () => {
 });
 
 test("parse error handling", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration", "--patterns", "./fixtures/syntax-error.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/syntax-error.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 1,
         "error": false,
@@ -313,9 +345,14 @@ test("parse error handling", async () => {
 });
 
 test("invalid selector", async () => {
-    const run = spawn("node", [cliPath, "%%%invalid%%%", "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "%%%invalid%%%",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -334,9 +371,14 @@ test("invalid selector", async () => {
 });
 
 test("empty file - no matches", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration", "--patterns", "./fixtures/empty.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/empty.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -355,9 +397,15 @@ test("empty file - no matches", async () => {
 });
 
 test("--selector named flag works same as positional", async () => {
-    const run = spawn("node", [cliPath, "--selector", "FunctionDeclaration", "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "--selector",
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -386,59 +434,86 @@ test("--selector named flag works same as positional", async () => {
 });
 
 test("--patterns with glob pattern", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration", "--patterns", "./fixtures/*.js"]);
-    await run.completion;
-    const result = run.cleanResult();
-    // exit code 1 because syntax-error.js causes a parse error
-    expect(result.code).toBe(1);
-    expect(result.stderr).toContain("Found 7 files.");
-    expect(result.stderr).toContain("3 total matches:");
-    expect(result.stderr).toContain("Failed to parse './fixtures/syntax-error.js'");
-    expect(result.stderr).toContain("./fixtures/simple.js:");
-    expect(result.stderr).toContain("./fixtures/two-functions.js:");
-    expect(result.stdout).toContain("./fixtures/simple.js:1:0-3:1");
-    expect(result.stdout).toContain("./fixtures/two-functions.js:1:0-3:1");
-    expect(result.stdout).toContain("./fixtures/two-functions.js:5:0-7:1");
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/*.js",
+  ]);
+  await run.completion;
+  const result = run.cleanResult();
+  // exit code 1 because syntax-error.js causes a parse error
+  expect(result.code).toBe(1);
+  expect(result.stderr).toContain("Found 7 files.");
+  expect(result.stderr).toContain("3 total matches:");
+  expect(result.stderr).toContain(
+    "Failed to parse './fixtures/syntax-error.js'"
+  );
+  expect(result.stderr).toContain("./fixtures/simple.js:");
+  expect(result.stderr).toContain("./fixtures/two-functions.js:");
+  expect(result.stdout).toContain("./fixtures/simple.js:1:0-3:1");
+  expect(result.stdout).toContain("./fixtures/two-functions.js:1:0-3:1");
+  expect(result.stdout).toContain("./fixtures/two-functions.js:5:0-7:1");
 });
 
 test("--patterns with recursive glob includes nested files", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration", "--patterns", "./fixtures/**/*.js"]);
-    await run.completion;
-    const result = run.cleanResult();
-    expect(result.code).toBe(1);
-    expect(result.stderr).toContain("Found 8 files.");
-    expect(result.stderr).toContain("4 total matches:");
-    expect(result.stderr).toContain("Failed to parse './fixtures/syntax-error.js'");
-    expect(result.stdout).toContain("./fixtures/simple.js:1:0-3:1");
-    expect(result.stdout).toContain("./fixtures/two-functions.js:1:0-3:1");
-    expect(result.stdout).toContain("./fixtures/two-functions.js:5:0-7:1");
-    expect(result.stdout).toContain("./fixtures/nested/deep.js:1:0-3:1");
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/**/*.js",
+  ]);
+  await run.completion;
+  const result = run.cleanResult();
+  expect(result.code).toBe(1);
+  expect(result.stderr).toContain("Found 8 files.");
+  expect(result.stderr).toContain("4 total matches:");
+  expect(result.stderr).toContain(
+    "Failed to parse './fixtures/syntax-error.js'"
+  );
+  expect(result.stdout).toContain("./fixtures/simple.js:1:0-3:1");
+  expect(result.stdout).toContain("./fixtures/two-functions.js:1:0-3:1");
+  expect(result.stdout).toContain("./fixtures/two-functions.js:5:0-7:1");
+  expect(result.stdout).toContain("./fixtures/nested/deep.js:1:0-3:1");
 });
 
 test("--ignore excludes matching files", async () => {
-    const run = spawn("node", [
-        cliPath, "FunctionDeclaration",
-        "--patterns", "./fixtures/**/*.js",
-        "--ignore", "./fixtures/nested/**",
-    ]);
-    await run.completion;
-    const result = run.cleanResult();
-    expect(result.code).toBe(1);
-    expect(result.stderr).toContain('["./fixtures/**/*.js","!./fixtures/nested/**"]');
-    expect(result.stderr).toContain("Found 7 files.");
-    expect(result.stderr).toContain("3 total matches:");
-    expect(result.stderr).toContain("Failed to parse './fixtures/syntax-error.js'");
-    expect(result.stdout).toContain("./fixtures/simple.js:1:0-3:1");
-    expect(result.stdout).toContain("./fixtures/two-functions.js:1:0-3:1");
-    expect(result.stdout).toContain("./fixtures/two-functions.js:5:0-7:1");
-    // nested/deep.js should be excluded by --ignore
-    expect(result.stdout).not.toContain("nested/deep.js");
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/**/*.js",
+    "--ignore",
+    "./fixtures/nested/**",
+  ]);
+  await run.completion;
+  const result = run.cleanResult();
+  expect(result.code).toBe(1);
+  expect(result.stderr).toContain(
+    '["./fixtures/**/*.js","!./fixtures/nested/**"]'
+  );
+  expect(result.stderr).toContain("Found 7 files.");
+  expect(result.stderr).toContain("3 total matches:");
+  expect(result.stderr).toContain(
+    "Failed to parse './fixtures/syntax-error.js'"
+  );
+  expect(result.stdout).toContain("./fixtures/simple.js:1:0-3:1");
+  expect(result.stdout).toContain("./fixtures/two-functions.js:1:0-3:1");
+  expect(result.stdout).toContain("./fixtures/two-functions.js:5:0-7:1");
+  // nested/deep.js should be excluded by --ignore
+  expect(result.stdout).not.toContain("nested/deep.js");
 });
 
 test("--no-gitignore flag", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration", "--patterns", "./fixtures/simple.js", "--no-gitignore"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/simple.js",
+    "--no-gitignore",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -467,24 +542,31 @@ test("--no-gitignore flag", async () => {
 });
 
 test("multiple space-separated patterns", async () => {
-    const run = spawn("node", [
-        cliPath, "FunctionDeclaration",
-        "--patterns", "./fixtures/simple.js ./fixtures/two-functions.js",
-    ]);
-    await run.completion;
-    const result = run.cleanResult();
-    expect(result.code).toBe(0);
-    expect(result.stderr).toContain("Found 2 files.");
-    expect(result.stderr).toContain("3 total matches:");
-    expect(result.stdout).toContain("./fixtures/simple.js:1:0-3:1");
-    expect(result.stdout).toContain("./fixtures/two-functions.js:1:0-3:1");
-    expect(result.stdout).toContain("./fixtures/two-functions.js:5:0-7:1");
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/simple.js ./fixtures/two-functions.js",
+  ]);
+  await run.completion;
+  const result = run.cleanResult();
+  expect(result.code).toBe(0);
+  expect(result.stderr).toContain("Found 2 files.");
+  expect(result.stderr).toContain("3 total matches:");
+  expect(result.stdout).toContain("./fixtures/simple.js:1:0-3:1");
+  expect(result.stdout).toContain("./fixtures/two-functions.js:1:0-3:1");
+  expect(result.stdout).toContain("./fixtures/two-functions.js:5:0-7:1");
 });
 
 test("stdout has match locations, stderr has code frames and details", async () => {
-    const run = spawn("node", [cliPath, "ReturnStatement", "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "ReturnStatement",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -511,9 +593,14 @@ test("stdout has match locations, stderr has code frames and details", async () 
 });
 
 test("output includes line and column info", async () => {
-    const run = spawn("node", [cliPath, "StringLiteral", "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "StringLiteral",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -540,9 +627,14 @@ test("output includes line and column info", async () => {
 });
 
 test("Identifier selector", async () => {
-    const run = spawn("node", [cliPath, "Identifier", "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "Identifier",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -569,9 +661,14 @@ test("Identifier selector", async () => {
 });
 
 test("ReturnStatement selector", async () => {
-    const run = spawn("node", [cliPath, "ReturnStatement", "--patterns", "./fixtures/two-functions.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "ReturnStatement",
+    "--patterns",
+    "./fixtures/two-functions.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -608,9 +705,14 @@ test("ReturnStatement selector", async () => {
 });
 
 test("descendant combinator selector", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration ReturnStatement", "--patterns", "./fixtures/simple.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration ReturnStatement",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -637,13 +739,14 @@ test("descendant combinator selector", async () => {
 });
 
 test("child combinator selector", async () => {
-    const run = spawn("node", [
-        cliPath,
-        "FunctionDeclaration > BlockStatement > ReturnStatement",
-        "--patterns", "./fixtures/simple.js",
-    ]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration > BlockStatement > ReturnStatement",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -670,13 +773,14 @@ test("child combinator selector", async () => {
 });
 
 test("attribute selector with value", async () => {
-    const run = spawn("node", [
-        cliPath,
-        "FunctionDeclaration[id.name=hello]",
-        "--patterns", "./fixtures/simple.js",
-    ]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration[id.name=hello]",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -705,13 +809,14 @@ test("attribute selector with value", async () => {
 });
 
 test("attribute selector that doesn't match", async () => {
-    const run = spawn("node", [
-        cliPath,
-        "FunctionDeclaration[id.name=nonexistent]",
-        "--patterns", "./fixtures/simple.js",
-    ]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration[id.name=nonexistent]",
+    "--patterns",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -730,13 +835,14 @@ test("attribute selector that doesn't match", async () => {
 });
 
 test(":not() pseudo selector", async () => {
-    const run = spawn("node", [
-        cliPath,
-        "FunctionDeclaration:not([id.name=foo])",
-        "--patterns", "./fixtures/two-functions.js",
-    ]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration:not([id.name=foo])",
+    "--patterns",
+    "./fixtures/two-functions.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -767,9 +873,14 @@ test(":not() pseudo selector", async () => {
 });
 
 test("patterns with no matching files", async () => {
-    const run = spawn("node", [cliPath, "FunctionDeclaration", "--patterns", "./fixtures/nonexistent-*.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "FunctionDeclaration",
+    "--patterns",
+    "./fixtures/nonexistent-*.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -788,9 +899,14 @@ test("patterns with no matching files", async () => {
 });
 
 test("JSXIdentifier selector in JSX file", async () => {
-    const run = spawn("node", [cliPath, "JSXIdentifier", "--patterns", "./fixtures/has-jsx.jsx"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "JSXIdentifier",
+    "--patterns",
+    "./fixtures/has-jsx.jsx",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -825,9 +941,14 @@ test("JSXIdentifier selector in JSX file", async () => {
 });
 
 test("TemplateLiteral selector", async () => {
-    const run = spawn("node", [cliPath, "TemplateLiteral", "--patterns", "./fixtures/arrow-functions.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "TemplateLiteral",
+    "--patterns",
+    "./fixtures/arrow-functions.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,
@@ -853,9 +974,14 @@ test("TemplateLiteral selector", async () => {
 });
 
 test("VariableDeclaration selector", async () => {
-    const run = spawn("node", [cliPath, "VariableDeclaration", "--patterns", "./fixtures/arrow-functions.js"]);
-    await run.completion;
-    expect(run.cleanResult()).toMatchInlineSnapshot(`
+  const run = spawn("node", [
+    cliPath,
+    "VariableDeclaration",
+    "--patterns",
+    "./fixtures/arrow-functions.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": false,

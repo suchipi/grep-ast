@@ -1,8 +1,7 @@
 import type { Loc } from "./types";
+import * as babylon from "@babel/parser";
 
-const babylon = require("@babel/parser");
-
-module.exports = {
+export default {
   patterns: ["./**/*.{js,jsx}"],
   gitignore: true,
   encoding: "utf-8",

@@ -1,18 +1,17 @@
 import type { Argv, Result } from "./types";
+import makeDebug from "debug";
+import esqueryModule from "@suchipi/esquery";
+import fsp from "fs/promises";
+import parseArgv from "./parseArgv";
 
-const debug = require("debug")(
-  "grep-ast:" + String(process.env.JEST_WORKER_ID)
-);
-const fs = require("fs");
-const esquery = require("@suchipi/esquery").configure({
+const debug = makeDebug("grep-ast:" + String(process.env.JEST_WORKER_ID));
+const esquery = esqueryModule.configure({
   getKeys(node: {}) {
     return Object.keys(node);
   },
 });
-const fsp = require("fs/promises");
-const parseArgv = require("./parseArgv");
 
-exports.processFile = async (
+export const processFile = async (
   filepath: string,
   argv: Argv
 ): Promise<Array<Result>> => {
@@ -22,7 +21,7 @@ exports.processFile = async (
   let contents: string;
   try {
     debug(`Reading ${filepath}`);
-    contents = await fsp.readFile(filepath, encoding);
+    contents = (await fsp.readFile(filepath, encoding)).toString();
   } catch (err: unknown) {
     return [
       {
@@ -48,7 +47,12 @@ exports.processFile = async (
     ];
   }
 
-  let nodes: Array<{ loc: { start: { line: number; column: number }; end: { line: number; column: number } } }>;
+  let nodes: Array<{
+    loc: {
+      start: { line: number; column: number };
+      end: { line: number; column: number };
+    };
+  }>;
   try {
     debug(`Querying AST for '${filepath}'`);
     nodes = esquery.query(ast, selector);
@@ -58,7 +62,9 @@ exports.processFile = async (
       {
         filepath,
         error: true,
-        message: `Failed to query AST for '${filepath}': ${(err as Error).message}`,
+        message: `Failed to query AST for '${filepath}': ${
+          (err as Error).message
+        }`,
       },
     ];
   }

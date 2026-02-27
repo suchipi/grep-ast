@@ -1,6 +1,6 @@
 # grep-ast
 
-CLI tool that searches your codebase for AST patterns using [@babel-parser](https://babeljs.io/docs/en/babel-parser) and  [esquery](https://github.com/estools/esquery).
+CLI tool that searches your codebase for AST patterns using [@babel-parser](https://babeljs.io/docs/en/babel-parser) and [esquery](https://github.com/estools/esquery).
 
 ## Usage
 
