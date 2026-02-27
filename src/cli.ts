@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import type { Result } from "./types";
 import chalk from "chalk";
-import babelCodeFrame from "@babel/code-frame";
+import * as babelCodeFrame from "@babel/code-frame";
 import ora from "ora";
 import grepAst from "./index";
 import readArgv from "./readArgv";
