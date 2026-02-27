@@ -9,8 +9,7 @@ const esquery = require("@suchipi/esquery").configure({
     return Object.keys(node);
   },
 });
-const pify = require("pify");
-const fsp = pify(fs);
+const fsp = require("fs/promises");
 const parseArgv = require("./parseArgv");
 
 exports.processFile = async (
