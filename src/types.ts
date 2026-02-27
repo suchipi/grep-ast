@@ -14,7 +14,7 @@ export type Options<NodeType = any, ParserOptionsType = any> = {
   selector: string;
   patterns: Array<string>;
   gitignore: boolean;
-  encoding: string;
+  encoding: NodeJS.BufferEncoding;
   parser: {
     parse: (code: string, options: ParserOptionsType) => {};
   };

@@ -1,6 +1,6 @@
 import type { Argv } from "./types";
 import makeDebug from "debug";
-import yargs from "yargs";
+import { parseArgv } from "clef-parse";
 
 const debug = makeDebug("grep-ast");
 
@@ -10,48 +10,53 @@ export default function readArgv(): Argv {
     return argv;
   }
 
-  const result = yargs
-    .option("selector", {
-      describe: "CSS-like selector string to search AST for",
-      type: "string",
-    })
-    .option("patterns", {
-      describe:
-        "Space-separated list of glob patterns matching which files to look in. Defaults to './**/*.{js,jsx}'.",
-      type: "string",
-    })
-    .option("ignore", {
-      describe: "Comma-separated list of glob patterns to ignore",
-      type: "string",
-    })
-    .option("gitignore", {
-      default: true,
-      describe:
-        "Whether to omit files listed in your .gitignore file(s). Defaults to 'true'.",
-      type: "boolean",
-    })
-    .option("encoding", {
-      describe: "The encoding to read your files as. Defaults to 'utf-8'.",
-      type: "string",
-    })
-    .option("parser", {
-      describe:
-        "The name of a parser module to use to parse your files. It should have a parse function on it. Defaults to '@babel/parser'.",
-      type: "string",
-    })
-    .option("parserOptions", {
-      describe:
-        "Options to pass to your parser's parse function, encoded as a JSON string.",
-      type: "string",
-    })
-    .option("getLoc", {
-      describe:
-        "Function that receives an AST node and returns an object describing the node's location. Defaults to 'node => node.loc'.",
-      type: "string",
-    }).argv;
+  const result = parseArgv(process.argv.slice(2), {
+    selector: String,
+    patterns: String,
+    ignore: String,
+    gitignore: Boolean,
+    encoding: String,
+    parser: String,
+    parserOptions: String,
+    getLoc: String,
+    help: Boolean,
+    version: Boolean,
+  });
 
-  // TODO
-  argv = result as any;
+  if (result.options.help) {
+    console.log(
+      `
+Options:
+  --help           Show help                                           [boolean]
+  --version        Show version number                                 [boolean]
+  --selector       CSS-like selector string to search AST for           [string]
+  --patterns       Space-separated list of glob patterns matching which files to
+                    look in. Defaults to './**/*.{js,jsx}'.              [string]
+  --ignore         Comma-separated list of glob patterns to ignore      [string]
+  --gitignore      Whether to omit files listed in your .gitignore file(s).
+                    Defaults to 'true'.                 [boolean] [default: true]
+  --encoding       The encoding to read your files as. Defaults to 'utf-8'.
+                                                                        [string]
+  --parser         The name of a parser module to use to parse your files. It
+                    should have a parse function on it. Defaults to
+                    '@babel/parser'.                                     [string]
+  --parserOptions  Options to pass to your parser's parse function, encoded as a
+                    JSON string.                                         [string]
+  --getLoc         Function that receives an AST node and returns an object
+                    describing the node's location. Defaults to 'node =>
+                    node.loc'.                                           [string]
+`.trim()
+    );
+    process.exit(0);
+  } else if (result.options.version) {
+    console.log(require("../package.json").version);
+    process.exit(0);
+  }
+
+  argv = {
+    ...result.options,
+    _: result.positionalArgs,
+  };
 
   debug("argv: ", argv);
 

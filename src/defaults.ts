@@ -4,7 +4,7 @@ import * as babylon from "@babel/parser";
 export default {
   patterns: ["./**/*.{js,jsx}"],
   gitignore: true,
-  encoding: "utf-8",
+  encoding: "utf-8" as const,
   parser: babylon,
   parserOptions: {
     allowImportExportEverywhere: true,

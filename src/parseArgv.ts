@@ -32,7 +32,11 @@ export default function parseArgv(argv: Argv): Options {
   }
 
   if (argv.encoding) {
-    options.encoding = argv.encoding;
+    if (Buffer.isEncoding(argv.encoding)) {
+      options.encoding = argv.encoding;
+    } else {
+      throw new Error(`Invalid buffer encoding: ${argv.encoding}`);
+    }
   }
 
   if (argv.parser) {

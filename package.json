@@ -12,7 +12,6 @@
     "@types/debug": "^4.1.12",
     "@types/node": "^25.3.2",
     "@types/resolve": "^1.20.6",
-    "@types/yargs": "^17.0.35",
     "first-base": "^1.6.1",
     "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
@@ -29,12 +28,12 @@
     "@babel/parser": "^7.20.7",
     "@suchipi/esquery": "^1.0.1",
     "chalk": "^4.1.2",
+    "clef-parse": "^0.6.0",
     "debug": "^4.3.4",
     "globby": "^11.1.0",
     "jest-worker": "^24.0.0",
     "make-module-env": "^1.0.1",
     "ora": "^5.4.1",
-    "resolve": "^1.22.1",
-    "yargs": "^17.6.2"
+    "resolve": "^1.22.1"
   }
 }
