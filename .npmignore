@@ -6,3 +6,4 @@ tsconfig.json
 .prettierignore
 yarn.lock
 yarn-error.log
+fixtures
