@@ -27,6 +27,7 @@
     "@babel/code-frame": "^7.29.0",
     "@babel/parser": "^7.29.0",
     "@suchipi/esquery": "^1.0.1",
+    "@suchipi/run-main": "^1.0.0",
     "clef-parse": "^0.6.0",
     "debug": "^4.4.3",
     "globby": "^11.1.0",

@@ -53,16 +53,23 @@ test("no selector - exits with error", async () => {
   const run = spawn("node", [cliPath, "--patterns", "./fixtures/simple.js"]);
   await run.completion;
   expect(run.cleanResult()).toMatchInlineSnapshot(`
-      {
-        "code": 1,
-        "error": false,
-        "stderr": "Error: Please specify a selector string to query for
-      Error: Please specify a selector string to query for
-          at somewhere
-      ",
-        "stdout": "",
-      }
-    `);
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "Error: Please specify a selector string to query for
+
+    ./dist/parseArgv.js:51:15                                                       
+    49   |     }
+    50   |     if (!options.selector) {
+    51 > |         throw new Error("Please specify a selector string to query for");
+    52   |     }
+    53   |     debug("passed options: ", options);
+    54   |     const { patterns = defaults_1.default.patterns, gitignore = defau...
+      at somewhere
+    ",
+      "stdout": "",
+    }
+  `);
 });
 
 test("basic selector match - FunctionDeclaration", async () => {
