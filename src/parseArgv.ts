@@ -22,7 +22,7 @@ export default function parseArgv(argv: Argv): Options {
   }
 
   if (argv.ignore) {
-    options.patterns = options.patterns!.concat(
+    options.patterns = options.patterns.concat(
       argv.ignore.split(",").map((dir: string) => `!${dir}`)
     );
   }
@@ -40,9 +40,12 @@ export default function parseArgv(argv: Argv): Options {
   }
 
   if (argv.parser) {
-    options.parser = require(resolve.sync(argv.parser, {
-      basedir: process.cwd(),
-    }));
+    options.parser = require(
+      resolve.sync(argv.parser, {
+        basedir: process.cwd(),
+        extensions: [".js", ".mjs", ".cjs"],
+      })
+    );
   }
 
   if (argv.getLoc) {
