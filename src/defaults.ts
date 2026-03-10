@@ -1,41 +1,15 @@
-import type { Loc } from "./types";
-import * as babylon from "@babel/parser";
+import type { Loc, Options } from "./types";
+import * as ee from "equivalent-exchange";
 
 export default {
-  patterns: ["./**/*.{js,jsx}"],
+  patterns: ["./**/*.[cm]?[jt]sx?"],
   gitignore: true,
   encoding: "utf-8" as const,
-  parser: babylon,
+  parser: ee,
   parserOptions: {
-    allowImportExportEverywhere: true,
-    allowAwaitOutsideFunction: true,
-    allowReturnOutsideFunction: true,
-    allowSuperOutsideMethod: true,
-    sourceType: "unambiguous",
-    plugins: [
-      "jsx",
-      "flow",
-      "doExpressions",
-      "objectRestSpread",
-      // "decorators",
-      "classProperties",
-      "classPrivateProperties",
-      "classPrivateMethods",
-      "exportDefaultFrom",
-      "exportNamespaceFrom",
-      "asyncGenerators",
-      "functionBind",
-      "functionSent",
-      "dynamicImport",
-      "numericSeparator",
-      "optionalChaining",
-      "importMeta",
-      "bigInt",
-      "optionalCatchBinding",
-      "throwExpressions",
-      // "pipelineOperator",
-      "nullishCoalescingOperator",
-    ],
+    parseOptions: {
+      skipRecast: true,
+    },
   },
-  getLoc: (node: { loc: Loc }): Loc => node.loc,
-};
+  getLoc: (node: ee.types.Node): Loc | null => node.loc ?? null,
+} satisfies Partial<Options<ee.types.Node, ee.Options>>;

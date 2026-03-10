@@ -19,7 +19,7 @@ export type Options<NodeType = any, ParserOptionsType = any> = {
     parse: (code: string, options: ParserOptionsType) => {};
   };
   parserOptions: ParserOptionsType;
-  getLoc: (node: NodeType) => Loc;
+  getLoc: (node: NodeType) => Loc | undefined | null;
 };
 
 export type Loc = {
@@ -43,6 +43,6 @@ export type Result =
       filepath: string;
       error: false;
       message: string;
-      loc: Loc;
+      loc: Loc | null | undefined;
       contents: string;
     };

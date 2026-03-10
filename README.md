@@ -1,6 +1,6 @@
 # grep-ast
 
-CLI tool that searches your codebase for AST patterns using [@babel-parser](https://babeljs.io/docs/en/babel-parser) and [esquery](https://github.com/estools/esquery).
+CLI tool that searches your codebase for AST patterns using [equivalent-exchange](https://github.com/suchipi/equivalent-exchange/) and [esquery](https://github.com/estools/esquery).
 
 ## Usage
 
@@ -13,7 +13,7 @@ npx grep-ast 'CallExpression[callee.name=require]:not([arguments.0.type=StringLi
 
 To quickly test your query syntax, you can use [esquery's live demo app](https://estools.github.io/esquery/).
 
-To get an idea of the AST format you need to grep over, you can use [AST Explorer](https://astexplorer.net/). To match the default parser and parser options for grep-ast, choose JavaScript, babylon7, and then press the gear next to babylon7 to open its settings, and uncheck "estree".
+To get an idea of the AST format you need to grep over, you can use [AST Explorer](https://astexplorer.net/). To match the default parser and parser options for grep-ast, choose JavaScript, `@babel/parser`, and then press the gear next to `@babel/parser` to open its settings, and uncheck "estree".
 
 ## CLI Options
 
@@ -23,20 +23,20 @@ Options:
   --version        Show version number                                 [boolean]
   --selector       CSS-like selector string to search AST for           [string]
   --patterns       Space-separated list of glob patterns matching which files to
-                   look in. Defaults to './**/*.{js,jsx}'.              [string]
+                    look in. Defaults to './**/*.[cm]?[jt]sx?'.         [string]
   --ignore         Comma-separated list of glob patterns to ignore      [string]
   --gitignore      Whether to omit files listed in your .gitignore file(s).
-                   Defaults to 'true'.                 [boolean] [default: true]
+                    Defaults to 'true'.                [boolean] [default: true]
   --encoding       The encoding to read your files as. Defaults to 'utf-8'.
                                                                         [string]
   --parser         The name of a parser module to use to parse your files. It
-                   should have a parse function on it. Defaults to
-                   '@babel/parser'.                                     [string]
+                    should have a parse function on it. Defaults to
+                    '@babel/parser'.                                    [string]
   --parserOptions  Options to pass to your parser's parse function, encoded as a
-                   JSON string.                                         [string]
+                    JSON string.                                        [string]
   --getLoc         Function that receives an AST node and returns an object
-                   describing the node's location. Defaults to 'node =>
-                   node.loc'.                                           [string]
+                    describing the node's location. Defaults to 'node =>
+                    node.loc'.                                          [string]
 ```
 
 ## License

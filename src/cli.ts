@@ -40,32 +40,41 @@ async function main() {
       process.stderr.write(kleur.red(result.message) + "\n");
       process.exitCode = 1;
     } else {
-      const codeFrame = babelCodeFrame.codeFrameColumns(
-        result.contents,
-        {
-          start: {
-            line: result.loc.start.line,
-            column: result.loc.start.column + 1,
+      if (result.loc) {
+        const codeFrame = babelCodeFrame.codeFrameColumns(
+          result.contents,
+          {
+            start: {
+              line: result.loc.start.line,
+              column: result.loc.start.column + 1,
+            },
+            end: {
+              line: result.loc.end.line,
+              column: result.loc.end.column + 1,
+            },
           },
-          end: {
-            line: result.loc.end.line,
-            column: result.loc.end.column + 1,
-          },
-        },
-        {
-          highlightCode: true,
-          message: result.message,
-        }
-      );
-      process.stderr.write(
-        result.filepath +
-          kleur.grey(
-            `:${result.loc.start.line}:${result.loc.start.column}-${result.loc.end.line}:${result.loc.end.column}`
-          ) +
-          "\n"
-      );
-      process.stderr.write(codeFrame + "\n");
-      process.stderr.write("\n");
+          {
+            highlightCode: true,
+            message: result.message,
+          }
+        );
+        process.stderr.write(
+          result.filepath +
+            kleur.grey(
+              `:${result.loc.start.line}:${result.loc.start.column}-${result.loc.end.line}:${result.loc.end.column}`
+            ) +
+            "\n"
+        );
+        process.stderr.write(codeFrame + "\n");
+        process.stderr.write("\n");
+      } else {
+        process.stderr.write(
+          kleur.yellow(
+            `Warning: Failed to obtain line/column info for following match.${argv.getLoc ? " Check that the --getLoc value you specified is correct." : ""}\n`
+          )
+        );
+        process.stderr.write(result.filepath + "\n");
+      }
     }
   });
 
@@ -74,13 +83,17 @@ async function main() {
     "\n" + kleur.blue(`${nonErrorResults.length} total matches:`) + "\n"
   );
   nonErrorResults.forEach((result) => {
-    process.stdout.write(
-      result.filepath +
-        kleur.grey(
-          `:${result.loc.start.line}:${result.loc.start.column}-${result.loc.end.line}:${result.loc.end.column}`
-        ) +
-        "\n"
-    );
+    if (result.loc) {
+      process.stdout.write(
+        result.filepath +
+          kleur.grey(
+            `:${result.loc.start.line}:${result.loc.start.column}-${result.loc.end.line}:${result.loc.end.column}`
+          ) +
+          "\n"
+      );
+    } else {
+      process.stdout.write(result.filepath + "\n");
+    }
   });
 }
 
