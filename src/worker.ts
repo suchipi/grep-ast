@@ -11,6 +11,23 @@ const esquery = esqueryModule.configure({
   },
 });
 
+function getErrorMessage(err: unknown) {
+  try {
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "message" in err &&
+      typeof err.message === "string"
+    ) {
+      return err.message;
+    } else {
+      return String(err);
+    }
+  } catch (_err2) {
+    return String(err);
+  }
+}
+
 export const processFile = async (
   filepath: string,
   argv: Argv
@@ -27,7 +44,7 @@ export const processFile = async (
       {
         filepath,
         error: true,
-        message: `Failed to read '${filepath}': ${(err as Error).message}`,
+        message: `Failed to read '${filepath}': ${getErrorMessage(err)}`,
       },
     ];
   }
@@ -35,14 +52,17 @@ export const processFile = async (
   let ast;
   try {
     debug(`Parsing ${filepath}`);
-    ast = parser.parse(contents, parserOptions);
+    ast = parser.parse(contents, {
+      ...parserOptions,
+      fileName: filepath,
+    });
   } catch (err: unknown) {
     debug(`Failed to parse '${filepath}'`);
     return [
       {
         filepath,
         error: true,
-        message: `Failed to parse '${filepath}': ${(err as Error).message}`,
+        message: `Failed to parse '${filepath}': ${getErrorMessage(err)}`,
       },
     ];
   }
@@ -62,9 +82,9 @@ export const processFile = async (
       {
         filepath,
         error: true,
-        message: `Failed to query AST for '${filepath}': ${
-          (err as Error).message
-        }`,
+        message: `Failed to query AST for '${filepath}': ${getErrorMessage(
+          err
+        )}`,
       },
     ];
   }
