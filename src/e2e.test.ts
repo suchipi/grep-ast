@@ -39,14 +39,14 @@ test("version flag", async () => {
   const run = spawn("node", [cliPath, "--version"]);
   await run.completion;
   expect(run.cleanResult()).toMatchInlineSnapshot(`
-      {
-        "code": 0,
-        "error": false,
-        "stderr": "",
-        "stdout": "0.5.0
-      ",
-      }
-    `);
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "1.6.0
+    ",
+    }
+  `);
 });
 
 test("no selector - exits with error", async () => {
@@ -58,13 +58,13 @@ test("no selector - exits with error", async () => {
       "error": false,
       "stderr": "Error: Please specify a selector string to query for
 
-    ./dist/parseArgv.js:51:15                                                       
-    49   |     }
-    50   |     if (!options.selector) {
-    51 > |         throw new Error("Please specify a selector string to query for");
-    52   |     }
-    53   |     debug("passed options: ", options);
-    54   |     const { patterns = defaults_1.default.patterns, gitignore = defau...
+    ./dist/parseArgv.js:52:15                                                       
+    50   |     }
+    51   |     if (!options.selector) {
+    52 > |         throw new Error("Please specify a selector string to query for");
+    53   |     }
+    54   |     debug("passed options: ", options);
+    55   |     const { patterns = defaults_1.default.patterns, gitignore = defau...
       at somewhere
     ",
       "stdout": "",
