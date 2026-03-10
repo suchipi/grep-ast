@@ -4,7 +4,7 @@
   "description": "Grep through code for AST patterns",
   "main": "dist/index.js",
   "bin": "dist/cli.js",
-  "author": "Suchipi <me@suchipi.com>",
+  "author": "Lily Skye <me@suchipi.com>",
   "license": "MIT",
   "repository": "suchipi/grep-ast",
   "devDependencies": {
