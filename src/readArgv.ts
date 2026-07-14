@@ -32,7 +32,7 @@ Options:
   --selector       CSS-like selector string to search AST for           [string]
   --patterns       Space-separated list of glob patterns matching which files to
                     look in. Defaults to './**/*.{c,m,}{j,t}s{,x}'.     [string]
-  --ignore         Comma-separated list of glob patterns to ignore      [string]
+  --ignore         Space-separated list of glob patterns to ignore      [string]
   --gitignore      Whether to omit files listed in your .gitignore file(s).
                     Defaults to 'true'.                [boolean] [default: true]
   --encoding       The encoding to read your files as. Defaults to 'utf-8'.

@@ -23,7 +23,7 @@ export default function parseArgv(argv: Argv): Options {
 
   if (argv.ignore) {
     options.patterns = options.patterns.concat(
-      argv.ignore.split(",").map((dir: string) => `!${dir}`)
+      argv.ignore.split(" ").map((dir: string) => `!${dir}`)
     );
   }
 
