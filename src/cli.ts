@@ -21,7 +21,7 @@ async function main() {
     ) +
       kleur.grey(
         ` (gitignore: ${
-          options.gitignore || defaults.gitignore ? "enabled" : "disabled"
+          (options.gitignore ?? defaults.gitignore) ? "enabled" : "disabled"
         })`
       )
   );
