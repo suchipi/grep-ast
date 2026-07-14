@@ -2,7 +2,7 @@ import type { Loc, Options } from "./types";
 import * as ee from "equivalent-exchange";
 
 export default {
-  patterns: ["./**/*.[cm]?[jt]sx?"],
+  patterns: ["./**/*.{c,m,}{j,t}s{,x}"],
   gitignore: true,
   encoding: "utf-8" as const,
   parser: ee,

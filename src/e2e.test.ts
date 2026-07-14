@@ -16,7 +16,7 @@ test("help text", async () => {
       --version        Show version number                                 [boolean]
       --selector       CSS-like selector string to search AST for           [string]
       --patterns       Space-separated list of glob patterns matching which files to
-                        look in. Defaults to './**/*.[cm]?[jt]sx?'.         [string]
+                        look in. Defaults to './**/*.{c,m,}{j,t}s{,x}'.     [string]
       --ignore         Comma-separated list of glob patterns to ignore      [string]
       --gitignore      Whether to omit files listed in your .gitignore file(s).
                         Defaults to 'true'.                [boolean] [default: true]
@@ -1018,4 +1018,36 @@ test("VariableDeclaration selector", async () => {
       ",
       }
     `);
+});
+
+test("default pattern searches expected paths", async () => {
+  const run = spawn("node", [cliPath, "Identifier[name=slice]"]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "- Matching patterns: ["./**/*.{c,m,}{j,t}s{,x}"] (gitignore: enabled)
+    ✔ Found 18 files.
+    - Parsing files...
+    ✔ Parsed files.
+
+    Results:
+    Failed to parse 'fixtures/syntax-error.js': Unexpected keyword 'return'. (2:2)
+    src/readArgv.ts:13:40-13:45
+      11 |   }
+      12 |
+    > 13 |   const result = parseArgv(process.argv.slice(2), {
+         |                                         ^^^^^
+      14 |     selector: String,
+      15 |     patterns: String,
+      16 |     ignore: String,
+
+
+    1 total matches:
+    ",
+      "stdout": "src/readArgv.ts:13:40-13:45
+    ",
+    }
+  `);
 });
