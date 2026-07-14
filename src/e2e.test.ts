@@ -1051,3 +1051,52 @@ test("default pattern searches expected paths", async () => {
     }
   `);
 });
+
+test.only("more stuff matches with --gitignore false", async () => {
+  const run = spawn("node", [
+    cliPath,
+    "--gitignore",
+    "false",
+    "--ignore",
+    "node_modules/**",
+    "Identifier[name=slice]",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "- Matching patterns: ["./**/*.{c,m,}{j,t}s{,x}","!node_modules/**"] (gitignore: disabled)
+    ✔ Found 34 files.
+    - Parsing files...
+    ✔ Parsed files.
+
+    Results:
+    Failed to parse 'fixtures/syntax-error.js': Unexpected keyword 'return'. (2:2)
+    dist/readArgv.js:15:60-15:65
+      13 |         return argv;
+      14 |     }
+    > 15 |     const result = (0, clef_parse_1.parseArgv)(process.argv.slice(2), {
+         |                                                             ^^^^^
+      16 |         selector: String,
+      17 |         patterns: String,
+      18 |         ignore: String,
+
+    src/readArgv.ts:13:40-13:45
+      11 |   }
+      12 |
+    > 13 |   const result = parseArgv(process.argv.slice(2), {
+         |                                         ^^^^^
+      14 |     selector: String,
+      15 |     patterns: String,
+      16 |     ignore: String,
+
+
+    2 total matches:
+    ",
+      "stdout": "dist/readArgv.js:15:60-15:65
+    src/readArgv.ts:13:40-13:45
+    ",
+    }
+  `);
+});
