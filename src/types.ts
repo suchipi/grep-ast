@@ -1,7 +1,7 @@
 export type Argv = Partial<{
   selector: string;
-  patterns: string;
-  ignore: string;
+  pattern: Array<string>;
+  ignore: Array<string>;
   gitignore: boolean;
   encoding: string;
   parser: string;

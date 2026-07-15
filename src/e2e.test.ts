@@ -1079,8 +1079,8 @@ test.only("more stuff matches with --gitignore false", async () => {
     > 15 |     const result = (0, clef_parse_1.parseArgv)(process.argv.slice(2), {
          |                                                             ^^^^^
       16 |         selector: String,
-      17 |         patterns: String,
-      18 |         ignore: String,
+      17 |         pattern: clef_parse_1.arrayOfStrings,
+      18 |         ignore: clef_parse_1.arrayOfStrings,
 
     src/readArgv.ts:13:40-13:45
       11 |   }
@@ -1088,8 +1088,8 @@ test.only("more stuff matches with --gitignore false", async () => {
     > 13 |   const result = parseArgv(process.argv.slice(2), {
          |                                         ^^^^^
       14 |     selector: String,
-      15 |     patterns: String,
-      16 |     ignore: String,
+      15 |     pattern: arrayOfStrings,
+      16 |     ignore: arrayOfStrings,
 
 
     2 total matches:

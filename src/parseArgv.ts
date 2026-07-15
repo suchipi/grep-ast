@@ -15,15 +15,15 @@ export default function parseArgv(argv: Argv): Options {
     options.selector = argv._?.[0] || argv.selector;
   }
 
-  if (argv.patterns) {
-    options.patterns = argv.patterns.split(" ");
+  if (argv.pattern) {
+    options.patterns = [...argv.pattern];
   } else {
     options.patterns = defaults.patterns;
   }
 
   if (argv.ignore) {
     options.patterns = options.patterns.concat(
-      argv.ignore.split(" ").map((globPattern: string) => `!${globPattern}`)
+      argv.ignore.map((globPattern: string) => `!${globPattern}`)
     );
   }
 

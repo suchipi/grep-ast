@@ -22,21 +22,24 @@ Options:
   --help           Show help                                           [boolean]
   --version        Show version number                                 [boolean]
   --selector       CSS-like selector string to search AST for           [string]
-  --patterns       Space-separated list of glob patterns matching which files to
-                    look in. Defaults to './**/*.{c,m,}{j,t}s{,x}'.     [string]
-  --ignore         Comma-separated list of glob patterns to ignore      [string]
+  --pattern        Glob pattern matching which files to look in. Defaults to
+                   './**/*.{c,m,}{j,t}s{,x}'.  Use flag more than once to
+                   provide more than one glob pattern.                  [string]
+  --ignore         Glob pattern to ignore (gets prefixed with '!'). Use flag
+                   more than once to provide more than one ignore
+                   pattern.                                             [string]
   --gitignore      Whether to omit files listed in your .gitignore file(s).
-                    Defaults to 'true'.                [boolean] [default: true]
-  --encoding       The encoding to read your files as. Defaults to 'utf-8'.
-                                                                        [string]
+                   Defaults to 'true'.                 [boolean] [default: true]
+  --encoding       The encoding to read your files as. Defaults to
+                   'utf-8'.                                             [string]
   --parser         The name of a parser module to use to parse your files. It
-                    should have a parse function on it. Defaults to
-                    '@babel/parser'.                                    [string]
-  --parserOptions  Options to pass to your parser's parse function, encoded as a
-                    JSON string.                                        [string]
+                   should export a parse function. Defaults to
+                   'equivalent-exchange'.                               [string]
+  --parserOptions  Options to pass to your parser's parse function, encoded as
+                   a JSON string.                                       [string]
   --getLoc         Function that receives an AST node and returns an object
-                    describing the node's location. Defaults to 'node =>
-                    node.loc'.                                          [string]
+                   describing the node's location. Defaults to 'node =>
+                   node.loc'.                                           [string]
 ```
 
 ## License
