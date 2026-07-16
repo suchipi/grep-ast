@@ -15,6 +15,7 @@ export default async function grepAst(
 
   debug(`Matching patterns '${patterns.join(", ")}'...`);
   const files = await globby(patterns, { gitignore });
+  files.sort();
   debug("Files matched:", files);
   onGlobResolved(files);
 
