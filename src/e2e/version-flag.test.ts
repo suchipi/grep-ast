@@ -10,7 +10,7 @@ test("version flag", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "1.6.1
+      "stdout": "2.0.0
     ",
     }
   `);
