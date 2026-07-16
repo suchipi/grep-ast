@@ -26,6 +26,7 @@ test("more stuff matches with --gitignore false", async () => {
     ✔ Parsed files.
 
     Results:
+    Failed to parse 'fixtures/syntax-error.js': Unexpected keyword 'return'. (2:2)
     dist/readArgv.js:15:60-15:65
       13 |         return argv;
       14 |     }
@@ -35,7 +36,6 @@ test("more stuff matches with --gitignore false", async () => {
       17 |         pattern: clef_parse_1.arrayOfStrings,
       18 |         ignore: clef_parse_1.arrayOfStrings,
 
-    Failed to parse 'fixtures/syntax-error.js': Unexpected keyword 'return'. (2:2)
     src/readArgv.ts:13:40-13:45
       11 |   }
       12 |

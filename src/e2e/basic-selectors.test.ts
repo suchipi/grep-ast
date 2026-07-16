@@ -255,6 +255,33 @@ test("invalid selector", async () => {
     `);
 });
 
+test("malformed selector - reports a query error", async () => {
+  const run = spawn("node", [
+    cliPath,
+    "[",
+    "--pattern",
+    "./fixtures/simple.js",
+  ]);
+  await run.completion;
+  expect(run.cleanResult()).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "- Matching patterns: ["./fixtures/simple.js"] (gitignore: enabled)
+    ✔ Found 1 files.
+    - Parsing files...
+    ✔ Parsed files.
+
+    Results:
+    Failed to query AST for './fixtures/simple.js': Expected " ", "." or [^ [\\],():#!=><~+.] but end of input found.
+
+    0 total matches:
+    ",
+      "stdout": "",
+    }
+  `);
+});
+
 test("no selector - exits with error", async () => {
   const run = spawn("node", [cliPath, "--pattern", "./fixtures/simple.js"]);
   await run.completion;
